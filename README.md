@@ -10,13 +10,13 @@ Ce dossier n'est pas une release et ne doit pas être exécuté. Il manque volon
 
 L'objectif est de permettre une lecture du code et une évaluation des compétences techniques, pas de fournir une application installable.
 
-## Ce Que Fait Le Projet
+## Ce que fait le projet
 
 AgathaAI est un runtime modulaire pour personnage IA. Il peut recevoir des messages depuis Discord, Twitch, une entrée vocale, un panneau web de contrôle et des intégrations de jeu. Ces entrées sont routées vers un modèle de langage local, une mémoire RAG, des outils natifs, une synthèse vocale, un système de modération et des hooks VTuber.
 
 En version simple : c'est un système de personnage IA capable d'écouter, répondre, parler, se souvenir, modérer un chat, réagir à des événements de stream et exposer son état dans une interface web.
 
-## Ce Que Cette Version Montre
+## Ce que cette version montre
 
 - Orchestration asynchrone Python pour plusieurs services temps réel.
 - Intégration Discord texte/voix avec un bot Node.js séparé.
@@ -31,7 +31,7 @@ En version simple : c'est un système de personnage IA capable d'écouter, répo
 - Scripts de génération de datasets, validation SFT/DPO, fine-tuning et quantification GPTQ.
 - Sous-système chess/game-AI avec entraînement, évaluation et outils de match.
 
-## Guide Des Dossiers
+## Guide des dossiers
 
 - `main.py` : coordinateur principal du runtime.
 - `src/AI/LLM/` : client LLM, streaming, nettoyage JSON, schémas d'outils et exécution des outils.
@@ -46,7 +46,7 @@ En version simple : c'est un système de personnage IA capable d'écouter, répo
 - `web/` : interface web de contrôle.
 - `scripts/` : préparation de données, audits, fine-tuning, quantification, stress tests et migrations.
 
-## Termes IA En Bref
+## Termes IA en bref
 
 - LLM : modèle de langage qui génère la réponse du personnage.
 - RAG : recherche dans une mémoire avant de répondre.
@@ -56,7 +56,7 @@ En version simple : c'est un système de personnage IA capable d'écouter, répo
 - GPTQ : quantification pour réduire la mémoire vidéo nécessaire.
 - vLLM : serveur d'inférence rapide compatible avec l'API OpenAI.
 
-## Confidentialité Et Éléments Retirés
+## Confidentialité et éléments retirés
 
 Cette version exclut volontairement :
 
@@ -70,7 +70,7 @@ Cette version exclut volontairement :
 
 Les noms ont été anonymisés : le projet s'appelle maintenant `AgathaAI`, le personnage `Agatha`, et les usernames en ligne ont été supprimés ou remplacés par des placeholders neutres.
 
-## Comment Lire Le Projet
+## Comment lire le projet
 
 La meilleure lecture consiste à le voir comme une étude de cas d'ingénierie :
 
@@ -80,7 +80,7 @@ La meilleure lecture consiste à le voir comme une étude de cas d'ingénierie :
 - examiner `scripts/fine_tune_qwen_vision.py`, `scripts/quant_qwen2.5-vl_to_gptq_int4.py` et les scripts de datasets pour la partie ML engineering ;
 - ouvrir `web/index.html`, `web/frontend_scripts.js` et `web/backend_scripts.js` pour le panneau de contrôle.
 
-## Compétences Démontrées
+## Compétences démontrées
 
 - conception de services Python asynchrones ;
 - intégration multi-process entre Python, Node.js, UI web et serveurs de modèles locaux ;
