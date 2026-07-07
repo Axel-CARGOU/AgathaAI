@@ -1,0 +1,23 @@
+{
+  "name": "agathaai",
+  "version": "0.0.1",
+  "description": "Anonymized non-executable portfolio excerpt of a local AI companion runtime",
+  "license": "SEE LICENSE IN LICENSE.txt",
+  "author": "Axel",
+  "type": "module",
+  "main": "src/discord/bot.js",
+  "scripts": {
+    "portfolio": "echo \"Portfolio-only copy; runtime assets are intentionally removed.\""
+  },
+  "dependencies": {
+    "@discordjs/opus": "^0.10.0",
+    "@discordjs/voice": "^0.19.2",
+    "@google-cloud/speech": "^7.3.1",
+    "discord.js": "14.26.1",
+    "playwright": "^1.60.0",
+    "prism-media": "^1.3.5"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.60.0"
+  }
+}

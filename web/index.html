@@ -1,0 +1,903 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AgathaAI Control Panel</title>
+    <link rel="icon" type="image/x-icon" href="/res/favicon.ico" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <a
+        class="brand"
+        href="#main"
+        data-view-link="main"
+        aria-label="AgathaAI Control Panel"
+      >
+        <img class="brand-avatar" src="/res/AgathaAI.png" alt="" />
+        <span>AgathaAI Control Panel</span>
+      </a>
+
+      <nav class="main-nav" aria-label="Primary navigation">
+        <button class="nav-link is-active" type="button" data-view-link="main">
+          Main
+        </button>
+        <button class="nav-link" type="button" data-view-link="memory">
+          Memory
+        </button>
+        <button class="nav-link" type="button" data-view-link="moderation">
+          Moderation
+        </button>
+        <button class="nav-link" type="button" data-view-link="vtube">
+          VTube Studio
+        </button>
+        <button class="nav-link" type="button" data-view-link="lobotomy">
+          Lobotomy
+        </button>
+        <button class="nav-link" type="button" data-view-link="games">
+          Games
+        </button>
+        <button class="nav-link" type="button" data-view-link="metrics">
+          Metrics
+        </button>
+      </nav>
+    </header>
+
+    <main class="app-shell">
+      <section
+        class="view is-active"
+        id="view-main"
+        data-view="main"
+        aria-labelledby="main-title"
+      >
+        <h1 class="view-title" id="main-title">Main</h1>
+
+        <div class="main-grid">
+          <div class="stack">
+            <article class="panel panel-current">
+              <div class="panel-heading">
+                <h2>Current Message</h2>
+                <span class="status-pill" data-bind="currentSource">Idle</span>
+              </div>
+              <textarea
+                class="textarea code-area"
+                id="current-message"
+                spellcheck="false"
+                placeholder="Current message"
+                readonly
+              ></textarea>
+              <div class="panel-actions">
+                <button
+                  class="btn danger"
+                  type="button"
+                  data-action="abort-message"
+                >
+                  Abort Message
+                </button>
+                <button
+                  class="btn secondary"
+                  type="button"
+                  data-action="clear-current"
+                >
+                  Clear
+                </button>
+              </div>
+            </article>
+
+            <article class="panel panel-current">
+              <div class="panel-heading">
+                <h2>LLM Stream Preview</h2>
+                <span class="status-pill muted" data-bind="streamMode"
+                  >Waiting</span
+                >
+              </div>
+              <textarea
+                class="textarea code-area compact"
+                id="stream-preview"
+                spellcheck="false"
+                placeholder="Generated tokens / sentence stream"
+                readonly
+              ></textarea>
+            </article>
+
+            <article class="panel settings-panel">
+              <div class="panel-heading">
+                <h2>Settings</h2>
+                <span class="status-pill" data-bind="settingsStatus"
+                  >Local</span
+                >
+              </div>
+
+              <div
+                class="segment-tabs"
+                role="tablist"
+                aria-label="Settings groups"
+              >
+                <button
+                  class="segment is-active"
+                  type="button"
+                  data-settings-tab="general"
+                >
+                  General
+                </button>
+                <button class="segment" type="button" data-settings-tab="llm">
+                  LLM
+                </button>
+                <button class="segment" type="button" data-settings-tab="stt">
+                  STT
+                </button>
+                <button class="segment" type="button" data-settings-tab="tts">
+                  TTS
+                </button>
+              </div>
+
+              <div class="settings-list" id="settings-list"></div>
+            </article>
+          </div>
+
+          <div class="stack">
+            <article class="panel">
+              <h2>Signals</h2>
+              <div class="signals-row">
+                <span class="signal" data-signal="aiThinking"
+                  ><i></i>AI Thinking</span
+                >
+                <span class="signal" data-signal="aiSpeaking"
+                  ><i></i>AI Speaking</span
+                >
+                <span class="signal" data-signal="humanSpeaking"
+                  ><i></i>Human Speaking</span
+                >
+              </div>
+            </article>
+
+            <article class="panel">
+              <div class="panel-heading">
+                <h2>Twitch</h2>
+                <span class="status-pill muted" data-bind="twitchCount"
+                  >0 messages</span
+                >
+              </div>
+              <div class="chat-feed" id="twitch-feed" aria-live="polite"></div>
+              <div class="toggle-grid">
+                <label class="toggle-line">
+                  <span class="toggle">
+                    <input type="checkbox" data-toggle="twitchChat" />
+                    <i></i>
+                  </span>
+                  <span>Enable Chat</span>
+                </label>
+                <label class="toggle-line">
+                  <span class="toggle">
+                    <input type="checkbox" data-toggle="twitchPoll" />
+                    <i></i>
+                  </span>
+                  <span>Enable Polls</span>
+                </label>
+                <label class="toggle-line">
+                  <span class="toggle">
+                    <input type="checkbox" data-toggle="twitchBan" />
+                    <i></i>
+                  </span>
+                  <span>Enable Bans</span>
+                </label>
+                <label class="toggle-line">
+                  <span class="toggle">
+                    <input type="checkbox" data-toggle="twitchTimeout" />
+                    <i></i>
+                  </span>
+                  <span>Enable Timeouts</span>
+                </label>
+              </div>
+            </article>
+
+            <article class="panel">
+              <h2>Controls</h2>
+              <div class="button-grid control-grid">
+                <button
+                  class="btn secondary"
+                  type="button"
+                  data-state-action="bot"
+                >
+                  Disable Bot
+                </button>
+                <button
+                  class="btn secondary"
+                  type="button"
+                  data-state-action="llm"
+                >
+                  Disable LLM
+                </button>
+                <button
+                  class="btn secondary"
+                  type="button"
+                  data-state-action="tts"
+                >
+                  Disable TTS
+                </button>
+                <button
+                  class="btn secondary"
+                  type="button"
+                  data-state-action="mute"
+                >
+                  Mute
+                </button>
+                <button
+                  class="btn secondary"
+                  type="button"
+                  data-state-action="vtuber"
+                >
+                  Disable VTuber
+                </button>
+              </div>
+              <div class="toggle-grid">
+                <label class="toggle-line">
+                  <span class="toggle"
+                    ><input type="checkbox" data-toggle="devMode" /><i></i
+                  ></span>
+                  <span>Debug Mode</span>
+                </label>
+                <label class="toggle-line">
+                  <span class="toggle"
+                    ><input type="checkbox" data-toggle="vision" /><i></i
+                  ></span>
+                  <span>Enable Vision</span>
+                </label>
+                <label class="toggle-line">
+                  <span class="toggle"
+                    ><input type="checkbox" data-toggle="webSearch" /><i></i
+                  ></span>
+                  <span>Enable Web Search</span>
+                </label>
+                <label class="toggle-line">
+                  <span class="toggle"
+                    ><input type="checkbox" data-toggle="fileSearch" /><i></i
+                  ></span>
+                  <span>Enable File Search</span>
+                </label>
+                <label class="toggle-line">
+                  <span class="toggle"
+                    ><input type="checkbox" data-toggle="editFile" /><i></i
+                  ></span>
+                  <span>Enable Edit File</span>
+                </label>
+              </div>
+            </article>
+
+            <article class="panel">
+              <h2>Sing</h2>
+              <select class="input" id="song-select">
+                <option value="">Select a song</option>
+                <option value="stub">Stub track</option>
+              </select>
+              <div class="button-grid media-grid">
+                <button
+                  class="btn secondary"
+                  type="button"
+                  data-action="song-play"
+                >
+                  Play
+                </button>
+                <button
+                  class="btn danger"
+                  type="button"
+                  data-action="song-stop"
+                >
+                  Stop
+                </button>
+                <button
+                  class="btn secondary"
+                  type="button"
+                  data-action="song-pause"
+                >
+                  Pause
+                </button>
+                <button
+                  class="btn secondary"
+                  type="button"
+                  data-action="song-resume"
+                >
+                  Resume
+                </button>
+              </div>
+            </article>
+
+            <article class="panel command-panel">
+              <div class="panel-heading">
+                <h2>Commandes</h2>
+                <span class="status-pill muted" data-bind="commandStatus"
+                  >Discord VC required</span
+                >
+              </div>
+
+              <div class="command-grid">
+                <label class="field-label compact" for="command-language"
+                  >Language</label
+                >
+                <select class="input" id="command-language">
+                  <option value="FR">FR</option>
+                  <option value="EN">EN</option>
+                </select>
+
+                <label class="field-label compact" for="command-type"
+                  >Type</label
+                >
+                <input
+                  class="input"
+                  id="command-type"
+                  type="text"
+                  placeholder="stream_intro"
+                  spellcheck="false"
+                />
+              </div>
+
+              <label class="field-label compact" for="command-context"
+                >Context</label
+              >
+              <textarea
+                class="textarea short"
+                id="command-context"
+                spellcheck="false"
+                placeholder="Contexte de la commande"
+              ></textarea>
+
+              <label class="field-label compact" for="command-instruction"
+                >Instruction</label
+              >
+              <textarea
+                class="textarea short"
+                id="command-instruction"
+                spellcheck="false"
+                placeholder="Instruction directe pour Agatha"
+              ></textarea>
+
+              <div class="button-grid command-prefill-grid">
+                <button
+                  class="btn secondary"
+                  type="button"
+                  data-command-prefill="stream_intro"
+                >
+                  Stream intro
+                </button>
+                <button
+                  class="btn secondary"
+                  type="button"
+                  data-command-prefill="stream_outro"
+                >
+                  Stream outro
+                </button>
+                <button
+                  class="btn secondary"
+                  type="button"
+                  data-command-prefill="tweet_shitpost"
+                >
+                  Tweet shitpost
+                </button>
+                <button
+                  class="btn secondary"
+                  type="button"
+                  data-command-prefill="tweet_stream_schedule"
+                >
+                  Tweet schedule
+                </button>
+              </div>
+
+              <div class="panel-actions">
+                <button
+                  class="btn"
+                  id="command-send"
+                  type="button"
+                  data-action="command-send"
+                  disabled
+                >
+                  Send Command
+                </button>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="view"
+        id="view-memory"
+        data-view="memory"
+        aria-labelledby="memory-title"
+      >
+        <h1 class="view-title" id="memory-title">Memory</h1>
+        <div class="two-column-grid">
+          <article class="panel">
+            <div class="panel-heading">
+              <div>
+                <h2>Memories</h2>
+                <p class="muted-text">
+                  Short-term and indexed long-term entries
+                </p>
+              </div>
+              <span
+                class="status-pill"
+                id="memory-status"
+                data-bind="memoryStatus"
+                >RAG offline</span
+              >
+            </div>
+            <div class="search-row">
+              <input
+                class="input"
+                id="memory-search"
+                type="search"
+                placeholder="search query (optional)"
+              />
+              <button
+                class="btn secondary"
+                type="button"
+                data-action="memory-search"
+              >
+                Search
+              </button>
+            </div>
+            <div class="memory-list" id="memory-list"></div>
+            <div class="panel-actions">
+              <button
+                class="btn danger"
+                type="button"
+                data-action="memory-clear-short"
+              >
+                Clear Short-Term
+              </button>
+              <button
+                class="btn secondary"
+                type="button"
+                data-action="memory-import"
+              >
+                Import JSON
+              </button>
+              <button
+                class="btn secondary"
+                type="button"
+                data-action="memory-export"
+              >
+                Export JSON
+              </button>
+              <input
+                class="hidden-file"
+                id="memory-import-file"
+                type="file"
+                accept="application/json,.json"
+              />
+            </div>
+          </article>
+
+          <article class="panel detail-panel">
+            <div class="panel-heading">
+              <h2>Memory Detail</h2>
+              <div class="icon-actions">
+                <button
+                  class="btn icon"
+                  type="button"
+                  data-action="memory-edit"
+                  aria-label="Edit memory"
+                >
+                  Edit
+                </button>
+                <button
+                  class="btn icon danger"
+                  type="button"
+                  data-action="memory-delete"
+                  aria-label="Delete memory"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+            <div class="detail-block" id="memory-detail"></div>
+            <div class="memory-editor">
+              <label class="field-label" for="memory-user-prompt"
+                >User Prompt</label
+              >
+              <textarea
+                class="textarea short"
+                id="memory-user-prompt"
+                spellcheck="false"
+              ></textarea>
+              <label class="field-label" for="memory-llm-response"
+                >Agatha Response</label
+              >
+              <textarea
+                class="textarea short"
+                id="memory-llm-response"
+                spellcheck="false"
+              ></textarea>
+              <div class="panel-actions">
+                <button
+                  class="btn secondary"
+                  type="button"
+                  data-action="memory-save"
+                >
+                  Save Memory
+                </button>
+                <button
+                  class="btn secondary"
+                  type="button"
+                  data-action="memory-new"
+                >
+                  New
+                </button>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section
+        class="view"
+        id="view-moderation"
+        data-view="moderation"
+        aria-labelledby="moderation-title"
+      >
+        <h1 class="view-title" id="moderation-title">Moderation</h1>
+        <div class="two-column-grid">
+          <article class="panel">
+            <div class="panel-heading">
+              <div>
+                <h2>Blacklist</h2>
+                <p class="muted-text">Whole-word matching stub</p>
+              </div>
+              <span class="status-pill muted">web/moderation</span>
+            </div>
+            <div class="blacklist-list" id="blacklist-list"></div>
+          </article>
+
+          <article class="panel">
+            <h2>Add Word</h2>
+            <div class="input-row">
+              <input
+                class="input"
+                id="blacklist-word"
+                type="text"
+                placeholder="word"
+              />
+              <button
+                class="btn secondary"
+                type="button"
+                data-action="blacklist-add"
+              >
+                Add
+              </button>
+            </div>
+            <label class="field-label" for="moderation-test">Match test</label>
+            <textarea
+              class="textarea short"
+              id="moderation-test"
+              placeholder="Type a sentence to test whole-word detection"
+            ></textarea>
+            <div class="match-preview" id="match-preview">No match</div>
+          </article>
+        </div>
+      </section>
+
+      <section
+        class="view"
+        id="view-vtube"
+        data-view="vtube"
+        aria-labelledby="vtube-title"
+      >
+        <h1 class="view-title" id="vtube-title">VTube Studio</h1>
+        <div class="cards-grid">
+          <article class="panel">
+            <h2>Trigger Hotkeys</h2>
+            <p class="muted-text">Decorative for now</p>
+            <div class="button-grid">
+              <button
+                class="btn secondary"
+                type="button"
+                data-action="vts-refresh"
+              >
+                Refresh
+              </button>
+              <button
+                class="btn secondary"
+                type="button"
+                data-action="vts-hotkey"
+              >
+                Trigger Selected
+              </button>
+            </div>
+          </article>
+          <article class="panel">
+            <h2>Props</h2>
+            <p class="muted-text">Prepared for item spawning</p>
+            <div class="button-grid">
+              <button
+                class="btn secondary"
+                type="button"
+                data-action="prop-spawn"
+              >
+                Spawn Microphone
+              </button>
+              <button
+                class="btn secondary"
+                type="button"
+                data-action="prop-despawn"
+              >
+                Despawn Microphone
+              </button>
+            </div>
+          </article>
+          <article class="panel">
+            <h2>Move Model</h2>
+            <p class="muted-text">OBS overlay workflow placeholder</p>
+            <div class="button-grid">
+              <button
+                class="btn secondary"
+                type="button"
+                data-action="vts-chatting"
+              >
+                Chatting
+              </button>
+              <button
+                class="btn secondary"
+                type="button"
+                data-action="vts-fullscreen"
+              >
+                Full Screen
+              </button>
+              <button
+                class="btn secondary"
+                type="button"
+                data-action="vts-reacting"
+              >
+                Reacting
+              </button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section
+        class="view"
+        id="view-lobotomy"
+        data-view="lobotomy"
+        aria-labelledby="lobotomy-title"
+      >
+        <h1 class="view-title" id="lobotomy-title">Lobotomy</h1>
+        <div class="two-column-grid">
+          <article class="panel prompt-panel">
+            <div class="panel-heading">
+              <div>
+                <h2>Current Prompt</h2>
+                <p class="muted-text">Loaded context files</p>
+              </div>
+              <button
+                class="btn secondary"
+                type="button"
+                data-action="prompt-save"
+              >
+                Save
+              </button>
+            </div>
+            <div class="segment-tabs" role="tablist" aria-label="Prompt files">
+              <button
+                class="segment is-active"
+                type="button"
+                data-prompt-tab="main"
+              >
+                Main
+              </button>
+              <button class="segment" type="button" data-prompt-tab="format">
+                Format
+              </button>
+              <button class="segment" type="button" data-prompt-tab="emotes">
+                Emotes
+              </button>
+              <button class="segment" type="button" data-prompt-tab="tools">
+                Tools
+              </button>
+              <button class="segment" type="button" data-prompt-tab="twitch">
+                Twitch
+              </button>
+            </div>
+            <textarea
+              class="textarea prompt-editor"
+              id="prompt-editor"
+              spellcheck="false"
+            ></textarea>
+            <div class="subsection-heading">
+              <h3>Seen by LLM</h3>
+              <span class="status-pill muted">Dynamic preview</span>
+            </div>
+            <textarea
+              class="textarea code-area seen-editor"
+              id="seen-by-llm"
+              spellcheck="false"
+              readonly
+            ></textarea>
+          </article>
+
+          <article class="panel prompt-panel">
+            <div class="panel-heading">
+              <div>
+                <h2>Temporary Context</h2>
+                <p class="muted-text">
+                  Injected before loaded contexts until shutdown
+                </p>
+              </div>
+              <button
+                class="btn danger"
+                type="button"
+                data-action="temp-context-clear"
+              >
+                Clear
+              </button>
+            </div>
+            <textarea
+              class="textarea prompt-editor"
+              id="temp-context"
+              spellcheck="false"
+              placeholder="Temporary prompt"
+            ></textarea>
+            <div class="panel-actions">
+              <button
+                class="btn secondary"
+                type="button"
+                data-action="temp-context-apply"
+              >
+                Apply
+              </button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section
+        class="view"
+        id="view-games"
+        data-view="games"
+        aria-labelledby="games-title"
+      >
+        <h1 class="view-title" id="games-title">Games</h1>
+        <div class="cards-grid">
+          <article class="panel game-card">
+            <div class="panel-heading">
+              <div>
+                <h2>Lichess</h2>
+                <p class="muted-text">src/AI/game_ai/chess/Lichess.py</p>
+              </div>
+              <span class="status-pill muted" data-bind="lichessStatus"
+                >Stopped</span
+              >
+            </div>
+            <div class="button-grid">
+              <button
+                class="btn secondary"
+                type="button"
+                data-game-action="lichess-start"
+              >
+                Launch Plugin
+              </button>
+              <button
+                class="btn danger"
+                type="button"
+                data-game-action="lichess-stop"
+              >
+                Close Plugin
+              </button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section
+        class="view"
+        id="view-metrics"
+        data-view="metrics"
+        aria-labelledby="metrics-title"
+      >
+        <h1 class="view-title" id="metrics-title">Metrics</h1>
+        <div class="metrics-toolbar">
+          <span class="status-pill" data-bind="metricsRun">No run</span>
+          <span class="status-pill muted" data-bind="metricsDaemon"
+            >Renderer stopped</span
+          >
+          <button
+            class="btn secondary"
+            type="button"
+            data-action="metrics-refresh"
+          >
+            Refresh View
+          </button>
+        </div>
+        <div class="two-column-grid">
+          <article class="panel metric-panel">
+            <div class="panel-heading">
+              <div>
+                <h2>vLLM Engine Metrics</h2>
+                <p class="muted-text" data-bind="engineGraphUpdated">
+                  Waiting for graph
+                </p>
+              </div>
+              <a
+                class="btn secondary metric-open"
+                id="engine-graph-open"
+                href="#"
+                target="_blank"
+                rel="noreferrer"
+                >Open</a
+              >
+            </div>
+            <div class="metric-image-frame">
+              <img id="engine-graph" alt="vLLM engine metrics graph" />
+              <span class="metric-empty" id="engine-graph-empty"
+                >No engine graph generated yet</span
+              >
+            </div>
+          </article>
+
+          <article class="panel metric-panel">
+            <div class="panel-heading">
+              <div>
+                <h2>LLM Request Metrics</h2>
+                <p class="muted-text" data-bind="requestGraphUpdated">
+                  Waiting for graph
+                </p>
+              </div>
+              <a
+                class="btn secondary metric-open"
+                id="request-graph-open"
+                href="#"
+                target="_blank"
+                rel="noreferrer"
+                >Open</a
+              >
+            </div>
+            <div class="metric-image-frame">
+              <img id="request-graph" alt="LLM request metrics graph" />
+              <span class="metric-empty" id="request-graph-empty"
+                >No request graph generated yet</span
+              >
+            </div>
+          </article>
+
+          <article class="panel metric-panel">
+            <div class="panel-heading">
+              <div>
+                <h2>NVIDIA SMI Metrics</h2>
+                <p class="muted-text" data-bind="nvidiaGraphUpdated">
+                  Waiting for graph
+                </p>
+              </div>
+              <a
+                class="btn secondary metric-open"
+                id="nvidia-graph-open"
+                href="#"
+                target="_blank"
+                rel="noreferrer"
+                >Open</a
+              >
+            </div>
+            <div class="metric-image-frame">
+              <img id="nvidia-graph" alt="NVIDIA SMI metrics graph" />
+              <span class="metric-empty" id="nvidia-graph-empty"
+                >No NVIDIA graph generated yet</span
+              >
+            </div>
+          </article>
+        </div>
+        <article class="panel metrics-files-panel">
+          <h2>Files</h2>
+          <div class="metrics-files" id="metrics-files"></div>
+        </article>
+      </section>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <footer class="app-footer">
+      <span>Copyright &copy; 2026 AgathaAI DEV-0.9.9</span>
+    </footer>
+
+    <script type="module" src="backend_scripts.js" defer></script>
+    <script type="module" src="frontend_scripts.js" defer></script>
+  </body>
+</html>

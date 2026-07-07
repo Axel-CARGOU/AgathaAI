@@ -1,0 +1,48 @@
+{
+  "LLM": {
+    "MODEL_PATH": "agathaai_vision_v8.4_7b_qwen2.5-vl_gptq_int4",
+    "EDIT_FILE": false,
+    "FILES_SEARCH": false,
+    "WEB_SEARCH": false,
+    "TWITCH_CHAT": false,
+    "TWITCH_POLL": false,
+    "TWITCH_BAN": false,
+    "TWITCH_TIMEOUT": false,
+    "MAX_TOKENS": 512,
+    "TEMPERATURE": 0.7,
+    "TOP_P": 1.0,
+    "MIN_P": 0.1,
+    "MAX_SEQ_LEN": 10240,
+    "REPETITION_PENALTY": 1.2,
+    "PRESENCE_PENALTY": 0.3,
+    "KV_Q4": true,
+    "VLLM_STARTUP_TIMEOUT": 900,
+    "VLLM_REQUEST_TIMEOUT": 300,
+    "VLLM_GPU_ALLOWED_USE": 0.9
+  },
+  "RAG": {
+    "ENABLED": true,
+    "QDRANT_PATH": "qdrant_data",
+    "COLLECTION_NAME": "agathaai_long_term_memory",
+    "SHORT_TERM_LIMIT": 10,
+    "LONG_TERM_CONTEXT_LIMIT": 5,
+    "EMBEDDING_MODEL": "intfloat/multilingual-e5-small",
+    "HASH_EMBEDDING_SIZE": 384,
+    "MAX_CONTEXT_CHARS": 4000,
+    "MAX_ENTRY_CHARS": 650,
+    "MAX_STORED_CHARS": 3000
+  },
+  "TTS": {
+    "VOICE_SAMPLE": "agatha.wav"
+  },
+  "STT": {
+    "SAMPLE_RATE": 48000,
+    "MODEL": "Google STT"
+  },
+  "GENERAL": {
+    "LANGUAGE": "fr",
+    "DEV_MODE": false,
+    "VTUBING": true,
+    "VTS_PORT": 7801
+  }
+}
